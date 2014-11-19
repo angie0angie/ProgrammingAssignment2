@@ -1,15 +1,56 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Creating a function to calculate the inverse of a square matrix and and 
+##creating another function to cache the inverse of a matrix to avoid recomputing 
 
-## Write a short comment describing this function
 
-makeCacheMatrix <- function(x = matrix()) {
+## This function creates a special "matrix" object that can cache its inverse.
 
+  makeCacheMatrix <- function(x = matrix()) { 
+  
+  m <- NULL    #  m will be our 'inverse matrix' and it's reset to NULL every 
+               #  time makeCacheMatrix is called
+  
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+  
+  get <- function() { x }   # this function returns the value of the original matrix
+  
+  setinverse <- function(inverse)  { m <<- inverse } # this is called by cacheSolve() during the first cacheSolve()
+  #  access and it will store the value using superassignment
+  
+  getinverse <- function() { m } # this will return the cached value to cacheSolve() on
+                              # subsequent accesses
+  
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse) # this is accessed each time makeVector() is called, this is 
+                            # the list of the internal functions 
 }
 
 
-## Write a short comment describing this function
+## This function computes the inverse of the special "matrix" returned by makeCacheMatrix above. 
+##If the inverse has already been calculated (and the matrix has not changed), 
+##then the cachesolve should retrieve the inverse from the cache.
 
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+
+  cacheSolve <- function(x, ...) {   # the input x is an object created by makeCacheMatrix
+    
+    m <- x$getmean()  # accesses the object 'x' and gets the inverse of the matrix
+    
+    if(!is.null(m)) {              # if the inverse was already cached (not NULL) ...
+      
+      message("getting cached data")  # send this message to the console
+      
+      return(m)                       # and return the inverse ... "return" ends the function cacheSolve()
+    }
+    
+    data <- x$get()        # we reach this code only if x$getinverse() returned NULL
+    
+    m <- inverse(data, ...)   # if m was NULL then we have to calculate the inverse
+    
+    x$setinverse(m)           # store the calculated inverse value in x 
+   
+    m                      # return the inverse to the code that called this function
+  
 }
