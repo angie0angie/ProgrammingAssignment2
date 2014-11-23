@@ -36,7 +36,7 @@
 
   cacheSolve <- function(x, ...) {   # the input x is an object created by makeCacheMatrix
     
-    m <- x$getmean()  # accesses the object 'x' and gets the inverse of the matrix
+    m <- x$getinverse()  # accesses the object 'x' and gets the inverse of the matrix
     
     if(!is.null(m)) {              # if the inverse was already cached (not NULL) ...
       
